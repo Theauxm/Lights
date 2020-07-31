@@ -1,8 +1,8 @@
 config.py
-custom.py
 dsp.py
 gamma_table.npy
 gui.py
 led.py
 melbank.py
 __pycache__
+microphone.py
