@@ -23,8 +23,7 @@ def main():
     strip.begin()
 
     try:
-        while True:
-            better_rainbow(strip)
+        better_rainbow(strip)
     except KeyboardInterrupt:
         wipe(strip)
 
