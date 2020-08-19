@@ -1,2 +1,2 @@
 # Lights
-Custom Music visualization as an add-on to audio-reactive-led-strip via https://github.com/scottlawsonbc/audio-reactive-led-strip
+Custom Light Visualization for https://github.com/rpi-ws281x/rpi-ws281x-python
