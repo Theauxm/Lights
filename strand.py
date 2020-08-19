@@ -23,47 +23,35 @@ def main():
     strip.begin()
 
     try:
-        better_rainbow(strip)
+        rainbow(strip)
     except KeyboardInterrupt:
         wipe(strip)
 
 def rainbow(strip):
     col = [255, 0, 0]
-    curr = 1
-    sets = 10
-    i = 0
-
-    while True:
-        for j in range(sets):
-            strip.setPixelColor((i + j) % strip.numPixels(), Color(col[0], col[1], col[2]))
-        col[curr] += 1
-
-        if col[curr] == 255:
-            while col[(curr - 1) % 3] > 0:
-                for j in range(sets):
-                    strip.setPixelColor((i + j) % strip.numPixels(), Color(col[0], col[1], col[2]))
-                col[(curr - 1) % 3] -= 1
-
-            curr = (curr + 1) % 3
-
-        i = (i + sets) % strip.numPixels()
-        strip.show()
-        time.sleep(5.0/1000.0)
-
-def better_rainbow(strip):
-    col = [255, 0, 0]
     pixels = []
     for k in range(strip.numPixels()):
-        pixels.append(col)
-        color_wheel(col)
+        pixels.append(color_wheel(col))
 
     while True:
         for j in range(strip.numPixels()):
-            color_wheel(pixels[j])
-            strip.setPixelColor(j, Color(pixels[j][0], pixels[j][1], pixels[j][2])) 
+            pixels[j] = color_wheel(pixels[j])
+            strip.setPixelColor(j, Color(pixels[j][2], pixels[j][1], pixels[j][0]))
         strip.show()
-        time.sleep(500.0/1000.0)
 
+def clash(strip):
+    num_snakes = 3
+    pos = {}
+    for i in range(num_snakes):
+        pos[strip.numPixels() // num_snakes] = Snake(10, rand_color(), True)
+
+    while True:
+        for snake in pos:
+            if snake.
+
+def rand_color()
+    num = rand.randint(0, 255)
+    return Color(num, (num + 85) % 255, (num + 170) % 255)
 
 def color_wheel(col):
     if col[0] == 0 and col[1] == 255 and col[2] == 0:
@@ -76,38 +64,38 @@ def color_wheel(col):
     if col[0] == 255:
         if col[1] == 255:
             col[0] -= 1
-            return
+            return [col[0], col[1], col[2]]
 
         if col[1] > 0 and col[1] < 255:
             col[1] += 1
-            return
+            return [col[0], col[1], col[2]]
         else:
             col[2] -= 1
-            return
+            return [col[0], col[1], col[2]]
 
     if col[1] == 255:
         if col[2] == 255:
             col[1] -= 1
-            return
+            return [col[0], col[1], col[2]]
 
         if col[2] > 0 and col[2] < 255:
             col[2] += 1
-            return
+            return [col[0], col[1], col[2]]
         else:
             col[0] -= 1
-            return
+            return [col[0], col[1], col[2]]
 
     if col[2] == 255:
         if col[0] == 255:
             col[2] -= 1
-            return
+            return [col[0], col[1], col[2]]
         
         if col[0] > 0 and col[0] < 255:
             col[0] += 1
-            return
+            return [col[0], col[1], col[2]]
         else:
             col[1] -= 1
-            return
+            return [col[0], col[1], col[2]]
 
 def set_color_range(strip, color, start, end):
     for i in range(start, end):
@@ -121,3 +109,9 @@ def wipe(strip):
 
 if __name__ == '__main__':
     main()
+
+class Snake:
+    def __init__(self, size, color, direction):
+        self.size = size
+        self.col = color
+        self.direc = direction
