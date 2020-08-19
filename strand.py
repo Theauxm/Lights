@@ -23,7 +23,8 @@ def main():
     strip.begin()
 
     try:
-        rainbow(strip)
+        clash(strip)
+        #rainbow(strip)
     except KeyboardInterrupt:
         wipe(strip)
 
@@ -43,13 +44,33 @@ def clash(strip):
     num_snakes = 3
     pos = {}
     for i in range(num_snakes):
-        pos[strip.numPixels() // num_snakes] = Snake(10, rand_color(), True)
+        position = strip.numPixels() // num_snakes
+        pos[position] = Snake(1, rand_color(), True, position)
 
     while True:
-        for snake in pos:
-            if snake.
+        update_snakes(strip, pos)
 
-def rand_color()
+        for snake in pos:
+            if snake.position == strip.numPixels() or snake.position == 0:
+                snake.direction = not snake.direction
+
+            if snake.position in pos:
+                # Change directions
+                snake.position = not snake.position
+                snake.color = rand_color()
+
+                pos[snake.position] = not pos[snake.position]
+                pos[snake.position] = rand.color()
+
+def update_snakes(strip, snakes):
+    for snake in snakes:
+        if strip.direction:
+            set_color_range(strip, snake.color, snake.position + 1, snake.position + snake.size + 1)
+        else:
+            set_color_range(strip, snake.color, snake.position - 1, snake.position + snake.size - 1)
+
+
+def rand_color():
     num = rand.randint(0, 255)
     return Color(num, (num + 85) % 255, (num + 170) % 255)
 
@@ -111,7 +132,8 @@ if __name__ == '__main__':
     main()
 
 class Snake:
-    def __init__(self, size, color, direction):
+    def __init__(self, size, color, direction, position):
         self.size = size
         self.col = color
         self.direc = direction
+        self.position = position
