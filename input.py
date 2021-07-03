@@ -23,4 +23,6 @@ def stream():
 
 data = stream()
 for i in data:
-    print(np.fromstring(i, 'Float32'))
+    x = list(np.frombuffer(i, dtype=np.int16))
+    print(x)
+    print(max(x))

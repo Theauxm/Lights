@@ -1,4 +1,4 @@
-import config, time, random, lightapi
+import config, time, random, lightapi, sin_oscillator
 from rpi_ws281x import *
 
 
@@ -6,10 +6,34 @@ def main():
     light = lightapi.lights()
 
     try:
-        rainbow(light)
+        sine_oscillation(light)
+        #rainbow(light)
         #random_colors(light)
     except KeyboardInterrupt:
         light.update(clear=True)
+
+def sine_oscillation(light):
+    """
+    Oscillates over a sine wave with red, green, and blue values
+    """
+    osc = sin_oscillator.SineOscillator(440, 0.5)
+
+    x = 0
+    while True:
+        val = int(osc.process() * 255 + 128)
+        if val <= 1:
+            x += 1
+        for i in range(light.strip.numPixels()):
+            if x % 3 == 0:
+                light.pixels[i] = [val, 0, 0]
+            elif x % 3 == 1:
+                light.pixels[i] = [0, val, 0]
+            else:
+                light.pixels[i] = [0, 0, val]
+
+
+        light.update()
+
 
 def random_colors(light):
     """
