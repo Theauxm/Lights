@@ -1,7 +1,5 @@
-import config
+import config, time, random
 from rpi_ws281x import *
-import time
-import random
 
 class lights:
     def __init__(self):
@@ -11,15 +9,15 @@ class lights:
                 config.LED_FREQ_HZ,
                 config.LED_DMA,
                 config.LED_INVERT,
-                config.LED_BRIGHTNESS
+                config.LED_BRIGHTNESS,
                 config.LED_CHANNEL)
 
-        self.pixels = [[0, 0 0] for i in range(strip.numPixels())]
+        self.pixels = [[0, 0, 0] for i in range(self.strip.numPixels())]
 
-        strip.begin()
+        self.strip.begin()
 
 
-    def update(clear=False):
+    def update(self, clear=False):
         for i in range (self.strip.numPixels()):
             if clear:
                 self.strip.setPixelColor(i, 0)
