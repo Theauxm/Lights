@@ -3,7 +3,6 @@ from rpi_ws281x import *
 
 
 def main():
-
     light = lightapi.lights()
 
     try:
@@ -13,6 +12,11 @@ def main():
         light.update(clear=True)
 
 def random_colors(light):
+    """
+    Sets strip to random RGB values every 0.4 seconds
+    Args:
+        light(lights) : A lights object to update the LED strip
+    """
     while True:
         for i in range(light.strip.numPixels()):
             light.pixels[i] = [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
@@ -21,6 +25,11 @@ def random_colors(light):
         light.update()
 
 def rainbow(light):
+    """
+    Sets strip to iterate each step in the color wheel of RGB values
+    Args:
+        light(lights) : A lights object to update the LED strip
+    """
     light.pixels = [[255, 0, 0]]
     for i in range(light.strip.numPixels() - 1):
         light.pixels.append(color_wheel(light.pixels[i]))
@@ -32,6 +41,11 @@ def rainbow(light):
         light.update()
 
 def color_wheel(col):
+    """
+    Gets the next value in the color wheel given an RGB value
+    Args:
+        col(list) : A 3 value list of values between 0 and 255
+    """
     if col[0] == 0 and col[1] == 255 and col[2] == 0:
         col[2] += 1
     if col[0] == 255 and col[1] == 0 and col[2] == 0:

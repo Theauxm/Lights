@@ -1,29 +1,26 @@
-import pyaudio
-import wave
+import pyaudio, wave, config, time
+import numpy as np
 
-CHUNK = 1024
-SAMPLE_FORMAT = pyaudio.paInt16
-channels = 2
-fs = 44100
-seconds = 1
+def stream():
+    data = []
 
-port = pyaudio.PyAudio()
+    p = pyaudio.PyAudio()
+    frames_per_buffer = int(config.INPUT_RATE / config.FPS)
+    stream = p.open(format=pyaudio.paInt16,
+                    channels=1,
+                    rate=config.INPUT_RATE,
+                    input=True,
+                    frames_per_buffer=frames_per_buffer)
+    for i in range(10):
+        data.append(stream.read(frames_per_buffer, exception_on_overflow=False))
 
-print('Recording')
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
 
-stream = p.open(format=sample_format,
-                channels=channels,
-                rate=fs,
-                frames_per_buffer=chunk,
-                input=True)
+    return data
 
 
-for i in range(int(fs / chunk * seconds)):
-    print(stream.read(chunk))
-
-
-stream.stop_stream()
-stream.close()
-p.terminate()
-
-print('Finished')
+data = stream()
+for i in data:
+    print(np.fromstring(i, 'Float32'))

@@ -3,6 +3,9 @@ from rpi_ws281x import *
 
 class lights:
     def __init__(self):
+        """
+        An API to sit on top of Adafruit_NeoPixel
+        """
         self.strip = Adafruit_NeoPixel(
                 config.LED_COUNT,
                 config.LED_PIN,
@@ -18,6 +21,11 @@ class lights:
 
 
     def update(self, clear=False):
+        """
+        Update the values of the LED strip given the values of self.pixels
+        Args:
+            clear(bool) : Boolean value based on whether the LEDs should be cleared
+        """
         for i in range (self.strip.numPixels()):
             if clear:
                 self.strip.setPixelColor(i, 0)
