@@ -1,44 +1,40 @@
 import config, time, random, lightapi, sin_oscillator, snake
 from rpi_ws281x import *
+from sin_oscillator import SineOscillator as sine
 
 
 def main():
     light = lightapi.lights()
 
     try:
+        waves(light)
         #overlapping_waves(light)
         #snakes(light, 10)
         #sine_oscillation(light)
-        rainbow(light)
+        #rainbow(light)
         #random_colors(light)
     except KeyboardInterrupt:
         light.update(clear=True)
 
-def overlapping_waves(light):
-    p = light.strip.numPixels()
-    osc = sin_oscillator.SineOscillator(200, 0.5)
-    osc_2 = sin_oscillator.SineOscillator(1000, 0.5)
-
-    osc_arr = [0 for i in range(p)]
-    osc_arr_2 = [0 for i in range(p)]
-
-    wheel = [[255, 0, 0]]
-    for i in range(light.strip.numPixels() - 1):
-        wheel.append(color_wheel(wheel[i], 1))
+def waves(light):
+    num_waves = 5
+    wave_array_r = [sine(random.randint(200, 1000), 1/(2*num_waves)) for i in range(num_waves)]
+    wave_array_g = [sine(random.randint(200, 1000), 1/(2*num_waves)) for i in range(num_waves)]
+    wave_array_b = [sine(random.randint(200, 1000), 1/(2*num_waves)) for i in range(num_waves)]
 
     while True:
-        for i in range(light.strip.numPixels()):
-            osc_arr[i] = int(osc.process() * 255 + 128)
-            osc_arr_2[i] = int(osc_2.process() * 255 + 128)
-            wheel[i] = color_wheel(wheel[i], 4)
-            light.pixels[i] = [(wheel[i][0] + osc_arr[i]) % light.strip.numPixels(), wheel[i][1], wheel[i][2]]
-
-        time.sleep(0.025)
+        light.pixels.pop(0)
+        light.pixels.append([sum(map(lambda x: int(x.process() * 255), wave_array_r)), 
+                            sum(map(lambda x: int(x.process() * 255), wave_array_g)), 
+                            sum(map(lambda x: int(x.process() * 255), wave_array_b))])
+        time.sleep(0.05)
+        print(light.pixels[len(light.pixels) - 1])
         light.update()
 
-def snakes(light, num_snakes):
+def snakes(light):
+    num_snakes = 10
     p = light.strip.numPixels()
-    osc = sin_oscillator.SineOscillator(440, 0.5)
+    osc = sine(440, 0.5)
     snake_list = [snake.snake(5, [-1,1][i%2], [255, 0, 0], i*(p//num_snakes)) for i in range(1, num_snakes + 1)]
     x = 0
     while True:
@@ -118,7 +114,9 @@ def rainbow(light):
     while True:
         for i in range(light.strip.numPixels()):
             light.pixels[i] = color_wheel(light.pixels[i], 1)
+            print(light.pixels[i])
 
+        time.sleep(0.05)
         light.update()
 
 

@@ -11,9 +11,9 @@ class SineOscillator:
 
     def process(self):
         """
-        amp * sin( 2 * pi * freq / sample_rate )
+        amp * sin( 2 * pi * freq / sample_rate ) + amp
         """
 
-        eq = self.amp * math.sin(self.angle)
+        eq = self.amp * math.sin(self.angle) + self.amp
         self.angle += self.offset
         return eq

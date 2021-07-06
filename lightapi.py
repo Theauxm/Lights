@@ -15,6 +15,7 @@ class lights:
                 config.LED_BRIGHTNESS,
                 config.LED_CHANNEL)
 
+
         self.pixels = [[0, 0, 0] for i in range(self.strip.numPixels())]
 
         self.strip.begin()
@@ -35,4 +36,11 @@ class lights:
                                                 self.pixels[i][2]))
 
         self.strip.show()
+
+    def play(self, algs):
+        bon_jovi = zip(map(lambda x: x(self), algs))
+        print(bon_jovi)
+        while True:
+            self.pixels.pop(0)
+
 
