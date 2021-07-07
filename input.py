@@ -11,7 +11,7 @@ def stream():
                     rate=config.INPUT_RATE,
                     input=True,
                     frames_per_buffer=frames_per_buffer)
-    for i in range(10):
+    for i in range(50):
         data.append(stream.read(frames_per_buffer, exception_on_overflow=False))
 
     stream.stop_stream()
@@ -22,7 +22,8 @@ def stream():
 
 
 data = stream()
+mini = 0
 for i in data:
-    x = list(np.frombuffer(i, dtype=np.int16))
-    print(x)
-    print(max(x))
+    for x in i:
+        print(x)
+

@@ -7,9 +7,9 @@ def main():
     light = lightapi.lights()
 
     try:
-        waves(light)
-        #overlapping_waves(light)
-        #snakes(light, 10)
+        #waves(light)
+        waves_2(light)
+        #snakes(light)
         #sine_oscillation(light)
         #rainbow(light)
         #random_colors(light)
@@ -17,18 +17,34 @@ def main():
         light.update(clear=True)
 
 def waves(light):
-    num_waves = 5
-    wave_array_r = [sine(random.randint(200, 1000), 1/(2*num_waves)) for i in range(num_waves)]
-    wave_array_g = [sine(random.randint(200, 1000), 1/(2*num_waves)) for i in range(num_waves)]
-    wave_array_b = [sine(random.randint(200, 1000), 1/(2*num_waves)) for i in range(num_waves)]
+    num_waves = 2
+    wave_array_r = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
+    wave_array_g = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
+    wave_array_b = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
 
     while True:
         light.pixels.pop(0)
         light.pixels.append([sum(map(lambda x: int(x.process() * 255), wave_array_r)), 
                             sum(map(lambda x: int(x.process() * 255), wave_array_g)), 
                             sum(map(lambda x: int(x.process() * 255), wave_array_b))])
-        time.sleep(0.05)
-        print(light.pixels[len(light.pixels) - 1])
+        light.update()
+
+def waves_2(light):
+    num_waves = 2
+    wave_array_r = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
+    wave_array_g = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
+    wave_array_b = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
+    mid = len(light.pixels) // 2
+
+    while True:
+        color = [sum(map(lambda x: int(x.process() * 255), wave_array_r)),
+                sum(map(lambda x: int(x.process() * 255), wave_array_g)),
+                sum(map(lambda x: int(x.process() * 255), wave_array_b))]
+
+        light.pixels.pop(len(light.pixels) - 1)
+        light.pixels.pop(0)
+        light.pixels.insert(mid, color)
+        light.pixels.insert(mid - 1, color)
         light.update()
 
 def snakes(light):
@@ -39,7 +55,7 @@ def snakes(light):
     x = 0
     while True:
         for j in range(num_snakes):
-            val = int(osc.process() * 255 + 128)
+            val = int(osc.process() * 255)
             if val <= 1:
                 x += 1
             for i in range(light.strip.numPixels()):
@@ -114,9 +130,7 @@ def rainbow(light):
     while True:
         for i in range(light.strip.numPixels()):
             light.pixels[i] = color_wheel(light.pixels[i], 1)
-            print(light.pixels[i])
 
-        time.sleep(0.05)
         light.update()
 
 
@@ -127,7 +141,7 @@ def color_wheel(col, iter):
         col(list) : A 3 value list of values between 0 and 255
     """
     if iter == 0:
-        return col
+        return [col[0], col[1], col[2]]
 
     if col[0] == 0 and col[1] == 255 and col[2] == 0:
         col[2] += 1
