@@ -1,36 +1,16 @@
-import config, time, random, lightapi, sin_oscillator, snake
+import time, random, lights, snake
 from rpi_ws281x import *
 from sin_oscillator import SineOscillator as sine
 
 
-def main():
-    light = lightapi.lights()
-
-    try:
-        #waves(light)
-        waves_2(light)
-        #snakes(light)
-        #sine_oscillation(light)
-        #rainbow(light)
-        #random_colors(light)
-    except KeyboardInterrupt:
-        light.update(clear=True)
-
-def waves(light):
-    num_waves = 2
-    wave_array_r = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
-    wave_array_g = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
-    wave_array_b = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
-
-    while True:
-        light.pixels.pop(0)
-        light.pixels.append([sum(map(lambda x: int(x.process() * 255), wave_array_r)), 
-                            sum(map(lambda x: int(x.process() * 255), wave_array_g)), 
-                            sum(map(lambda x: int(x.process() * 255), wave_array_b))])
-        light.update()
+################## LIGHT PATTERNS ##################
 
 def waves_2(light):
-    num_waves = 2
+    """
+    Puts num_waves * 3 number of sin waves on top of each other with random frequencies
+    Appends to the middle of the list, and pops the beginning and last index of the list
+    """
+    num_waves = 4
     wave_array_r = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
     wave_array_g = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
     wave_array_b = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
@@ -48,6 +28,9 @@ def waves_2(light):
         light.update()
 
 def snakes(light):
+    """
+    Creates num_snakes amount of snakes and changes the snakes color when they touch
+    """
     num_snakes = 10
     p = light.strip.numPixels()
     osc = sine(440, 0.5)
@@ -98,12 +81,6 @@ def sine_oscillation(light):
 
         light.update()
 
-def rand_rgb():
-    """
-    Generates and returns a random RGB value
-    """
-    return [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
-
 def random_colors(light):
     """
     Sets strip to random RGB values every 0.4 seconds
@@ -133,6 +110,7 @@ def rainbow(light):
 
         light.update()
 
+################## EXTRA METHODS ##################
 
 def color_wheel(col, iter):
     """
@@ -185,6 +163,27 @@ def color_wheel(col, iter):
         else:
             col[1] -= 1
             return color_wheel(col, iter - 1)
+
+def rand_rgb():
+    """
+    Generates and returns a random RGB value
+    """
+    return [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
+
+
+################## MAIN ##################
+
+def main():
+    light = lights.lights()
+
+    try:
+        waves_2(light)
+        #snakes(light)
+        #sine_oscillation(light)
+        #rainbow(light)
+        #random_colors(light)
+    except KeyboardInterrupt:
+        light.update(clear=True)
 
 if __name__ == "__main__":
     main()

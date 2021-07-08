@@ -3,7 +3,7 @@ LED_COUNT = 450 # Amount of LEDs on the strip
 LED_PIN = 12 # GPIO pin on Raspberry Pi
 LED_FREQ_HZ = 800000
 LED_DMA = 10
-LED_BRIGHTNESS = 20 # Brightness of the LED strip
+LED_BRIGHTNESS = 10 # Brightness of the LED strip
 LED_INVERT = False
 LED_CHANNEL = 0
 
