@@ -10,16 +10,16 @@ def waves_2(light):
     Puts num_waves * 3 number of sin waves on top of each other with random frequencies
     Appends to the middle of the list, and pops the beginning and last index of the list
     """
-    num_waves = 4
+    num_waves = 1
     wave_array_r = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
     wave_array_g = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
     wave_array_b = [sine(random.randint(100, 1000), 1/(2*num_waves)) for i in range(num_waves)]
     mid = len(light.pixels) // 2
 
     while True:
-        color = [sum(map(lambda x: int(x.process() * 255), wave_array_r)),
+        color = (sum(map(lambda x: int(x.process() * 255), wave_array_r)),
                 sum(map(lambda x: int(x.process() * 255), wave_array_g)),
-                sum(map(lambda x: int(x.process() * 255), wave_array_b))]
+                sum(map(lambda x: int(x.process() * 255), wave_array_b)))
 
         light.pixels.pop(len(light.pixels) - 1)
         light.pixels.pop(0)
@@ -174,7 +174,7 @@ def rand_rgb():
 ################## MAIN ##################
 
 def main():
-    light = lights.lights()
+    light = lights.Lights()
 
     try:
         waves_2(light)
